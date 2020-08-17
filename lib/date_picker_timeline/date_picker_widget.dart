@@ -1,11 +1,11 @@
 import 'package:hijri/hijri_calendar.dart';
-import 'package:thakker/date_picker_timeline/date_widget.dart';
-import 'package:thakker/date_picker_timeline/extra/color.dart';
-import 'package:thakker/date_picker_timeline/extra/style.dart';
-import 'package:thakker/date_picker_timeline/gestures/tap.dart';
+import 'package:fthakker/date_picker_timeline/date_widget.dart';
+import 'package:fthakker/date_picker_timeline/extra/color.dart';
+import 'package:fthakker/date_picker_timeline/extra/style.dart';
+import 'package:fthakker/date_picker_timeline/gestures/tap.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:thakker/size_config.dart';
+import 'package:fthakker/size_config.dart';
 
 class DatePicker extends StatefulWidget {
   /// Start Date in case user wants to show past dates

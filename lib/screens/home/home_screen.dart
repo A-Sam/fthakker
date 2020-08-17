@@ -2,14 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:thakker/models/fasting.dart';
-import 'package:thakker/models/islamic_prayers.dart';
-import 'package:thakker/models/models.dart';
-import 'package:thakker/models/prayers.dart';
-import 'package:thakker/models/zakah.dart';
-import 'package:thakker/screens/home/body.dart';
-import 'package:thakker/screens/prayer_card.dart';
-import 'package:thakker/size_config.dart';
+import 'package:fthakker/models/fasting.dart';
+import 'package:fthakker/models/islamic_prayers.dart';
+import 'package:fthakker/models/models.dart';
+import 'package:fthakker/models/prayers.dart';
+import 'package:fthakker/models/zakah.dart';
+import 'package:fthakker/screens/home/body.dart';
+import 'package:fthakker/screens/prayer_card.dart';
+import 'package:fthakker/size_config.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

@@ -7,10 +7,10 @@ import 'package:hijri/hijri_calendar.dart';
 /// github: https://github.com/iamvivekkaushik/
 /// ***
 
-import 'package:thakker/date_picker_timeline/gestures/tap.dart';
+import 'package:fthakker/date_picker_timeline/gestures/tap.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:thakker/models/islamic_prayers.dart';
+import 'package:fthakker/models/islamic_prayers.dart';
 
 class DateWidget extends StatelessWidget {
   final double width;

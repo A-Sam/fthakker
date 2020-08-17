@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:thakker/screens/home/home_screen.dart';
+import 'package:fthakker/screens/home/home_screen.dart';
 
 void main() => runApp(MyApp());
 

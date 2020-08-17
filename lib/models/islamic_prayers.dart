@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
-import 'package:thakker/date_picker_timeline/date_picker_widget.dart';
-import 'package:thakker/size_config.dart';
+import 'package:fthakker/date_picker_timeline/date_picker_widget.dart';
+import 'package:fthakker/size_config.dart';
 
 class IslamicPrayersType {
   final int id;

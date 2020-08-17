@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:thakker/models/models.dart';
-import 'package:thakker/models/prayers.dart';
-import 'package:thakker/screens/prayer_card.dart';
-import 'package:thakker/size_config.dart';
+import 'package:fthakker/models/models.dart';
+import 'package:fthakker/models/prayers.dart';
+import 'package:fthakker/screens/prayer_card.dart';
+import 'package:fthakker/size_config.dart';
 
 class Body extends StatelessWidget {
   @override
