@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fthakker/date_picker_timeline/date_widget.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fthakker/models/fasting.dart';
 import 'package:fthakker/models/islamic_prayers.dart';
@@ -18,16 +20,18 @@ class HomeScreen extends StatefulWidget {
 
 class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
   TabController _tabController;
+  HijriCalendar todayHijri = HijriCalendar.now();
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   @override
   void initState() {
+    super.initState();
+
     _tabController = TabController(length: 4, vsync: this);
     _getThingsOnStartup().then((value) {});
-
-    super.initState();
+    HijriCalendar.setLocal("ar");
   }
 
   @override
@@ -108,7 +112,7 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
       centerTitle: false,
       backgroundColor: Colors.white,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         textDirection: TextDirection.rtl,
         children: [
           Padding(
@@ -127,11 +131,79 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
-          Spacer(),
-          Text(
-            "ذي الحجة ١٤٣٢",
-            style:
-                TextStyle(fontSize: 15, color: Theme.of(context).accentColor),
+          // Spacer(),
+          IntrinsicHeight(
+            child: Row(
+              textDirection: TextDirection.rtl,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Text(
+                    todayHijri.getDayName(),
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(
+                        fontSize: 15, color: Theme.of(context).accentColor),
+                  ),
+                ),
+                VerticalDivider(
+                  color: Theme.of(context).accentColor,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      todayHijri.hDay.toString(),
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          fontSize: 15, color: Theme.of(context).accentColor),
+                    ),
+                    Text(
+                      DateTime.now().day.toString(),
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          fontSize: 15, color: Theme.of(context).accentColor),
+                    ),
+                  ],
+                ),
+                VerticalDivider(
+                  color: Theme.of(context).accentColor,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      todayHijri.getLongMonthName(),
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          fontSize: 15, color: Theme.of(context).accentColor),
+                    ),
+                    Text(
+                      DateWidget.currentMonthEnglish,
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          fontSize: 15, color: Theme.of(context).accentColor),
+                    ),
+                  ],
+                ),
+                VerticalDivider(
+                  color: Theme.of(context).accentColor,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      todayHijri.hYear.toString(),
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          fontSize: 15, color: Theme.of(context).accentColor),
+                    ),
+                    Text(
+                      DateTime.now().year.toString(),
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          fontSize: 15, color: Theme.of(context).accentColor),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           )
         ],
       ),

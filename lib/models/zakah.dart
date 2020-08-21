@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'date_picker.dart';
-
 class HomePageCardZakahReminder extends StatefulWidget {
   const HomePageCardZakahReminder({
     Key key,
@@ -16,7 +14,7 @@ class HomePageCardZakahReminder extends StatefulWidget {
 
 class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
     with AutomaticKeepAliveClientMixin<HomePageCardZakahReminder> {
-  DateTime zakahStartDate, zakahEndDate;
+  DateTime zakahStartDate = DateTime.now(), zakahEndDate = DateTime.now();
   int zakahStartDateYear, zakahStartDateMonth, zakahStartDateDay;
   double zakahValue, savingsValue;
   TextEditingController _controllerZakahStartDateY;
@@ -28,19 +26,26 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
   void initState() {
     super.initState();
 
-    updateZakahDetails();
+    getZakahDetails();
 
     _refreshOnStartup().then((value) {
       setState(() {
-        updateZakahDetails();
+        getZakahDetails();
       });
     });
   }
 
   @override
+  void dispose() {
+    setZakahDetails();
+
+    super.dispose();
+  }
+
+  @override
   bool get wantKeepAlive => true;
 
-  updateZakahDetails() async {
+  getZakahDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     savingsValue = prefs.getDouble('savingsValue');
@@ -50,13 +55,26 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
     zakahStartDateYear = prefs.getInt('zakahStartDateYear');
     _controllerZakahStartDateY =
         TextEditingController(text: zakahStartDateYear.toString());
+
     zakahStartDateMonth = prefs.getInt('zakahStartDateMonth');
     _controllerZakahStartDateM =
         TextEditingController(text: zakahStartDateMonth.toString());
+
     zakahStartDateDay = prefs.getInt('zakahStartDateDay');
     _controllerZakahStartDateD = TextEditingController()
       ..text = zakahStartDateDay.toString();
 
+    zakahStartDate =
+        DateTime(zakahStartDateYear, zakahStartDateMonth, zakahStartDateDay);
+
+    if (zakahStartDate != null)
+      zakahEndDate = zakahStartDate.add(Duration(days: 365));
+
+    zakahValue = savingsValue != null ? savingsValue / 40 : 0;
+  }
+
+  setZakahDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('savingsValue', savingsValue);
     await prefs.setInt('zakahStartDateYear', zakahStartDateYear);
     await prefs.setInt('zakahStartDateMonth', zakahStartDateMonth);
@@ -104,7 +122,7 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                 children: [
                   Row(
                     textDirection: TextDirection.rtl,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
                         width: 180,
@@ -113,17 +131,22 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                             Text(
                               "بداية العام",
                               textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 15.0,
                               ),
                             ),
                             Row(
+                              textDirection: TextDirection.rtl,
                               children: [
                                 SizedBox(
                                   height: 40,
                                   width: 50,
                                   child: TextField(
+                                    textAlign: TextAlign.center,
+                                    inputFormatters: <TextInputFormatter>[
+                                      WhitelistingTextInputFormatter.digitsOnly
+                                    ],
                                     controller: _controllerZakahStartDateD,
                                     decoration: const InputDecoration(
                                       filled: true,
@@ -136,6 +159,12 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                                     keyboardType: TextInputType.number,
                                     maxLines: 1,
                                     minLines: 1,
+                                    onChanged: (val) {
+                                      zakahStartDateDay = int.parse(val);
+                                      setState(() {
+                                        setZakahDetails();
+                                      });
+                                    },
                                   ),
                                 ),
                                 SizedBox(
@@ -145,6 +174,10 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                                   height: 40,
                                   width: 50,
                                   child: TextField(
+                                    textAlign: TextAlign.center,
+                                    inputFormatters: <TextInputFormatter>[
+                                      WhitelistingTextInputFormatter.digitsOnly
+                                    ],
                                     controller: _controllerZakahStartDateM,
                                     decoration: const InputDecoration(
                                       filled: true,
@@ -157,6 +190,12 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                                     keyboardType: TextInputType.number,
                                     maxLines: 1,
                                     minLines: 1,
+                                    onChanged: (val) {
+                                      zakahStartDateMonth = int.parse(val);
+                                      setState(() {
+                                        setZakahDetails();
+                                      });
+                                    },
                                   ),
                                 ),
                                 SizedBox(
@@ -166,6 +205,10 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                                   height: 40,
                                   width: 70,
                                   child: TextField(
+                                    textAlign: TextAlign.center,
+                                    inputFormatters: <TextInputFormatter>[
+                                      WhitelistingTextInputFormatter.digitsOnly
+                                    ],
                                     controller: _controllerZakahStartDateY,
                                     decoration: const InputDecoration(
                                       filled: true,
@@ -178,6 +221,12 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                                     keyboardType: TextInputType.number,
                                     maxLines: 1,
                                     minLines: 1,
+                                    onChanged: (val) {
+                                      zakahStartDateYear = int.parse(val);
+                                      setState(() {
+                                        setZakahDetails();
+                                      });
+                                    },
                                   ),
                                 ),
                               ],
@@ -207,8 +256,12 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                               child: Column(
                                 children: <Widget>[
                                   Text(
-                                    DateTime.now().year.toString(),
-                                    style: TextStyle(fontSize: 25.0),
+                                    zakahEndDate.year.toString() +
+                                        "." +
+                                        zakahEndDate.month.toString() +
+                                        "." +
+                                        zakahEndDate.day.toString(),
+                                    style: TextStyle(fontSize: 20.0),
                                   ),
                                 ],
                               ),
@@ -223,7 +276,7 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                   ),
                   Row(
                     textDirection: TextDirection.rtl,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
                         width: 180.0,
@@ -239,7 +292,11 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                           SizedBox(
                             height: 40,
                             child: TextField(
+                              textAlign: TextAlign.center,
                               controller: _controllerZakahStartSavings,
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter.digitsOnly
+                              ],
                               decoration: const InputDecoration(
                                 filled: true,
                                 labelText: "القيمة",
@@ -251,6 +308,12 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                               keyboardType: TextInputType.number,
                               maxLines: 1,
                               minLines: 1,
+                              onChanged: (val) {
+                                savingsValue = double.parse(val);
+                                setState(() {
+                                  setZakahDetails();
+                                });
+                              },
                             ),
                           ),
                         ]),
@@ -263,7 +326,7 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                           Text(
                             "قيمة الزكاة",
                             textDirection: TextDirection.rtl,
-                            textAlign: TextAlign.right,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 15.0,
                             ),
@@ -278,7 +341,7 @@ class _HomePageCardZakahReminderState extends State<HomePageCardZakahReminder>
                                 children: <Widget>[
                                   Text(
                                     zakahValue != null
-                                        ? "\$ $zakahValue"
+                                        ? "\$ " + zakahValue.round().toString()
                                         : "\$ 0",
                                     style: TextStyle(fontSize: 25.0),
                                   ),

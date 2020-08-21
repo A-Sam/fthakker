@@ -21,6 +21,9 @@ class DateWidget extends StatelessWidget {
   final DateSelectionCallback onDateSelected;
   final String locale;
 
+  static var currentMonthEnglish =
+      DateFormat("MMM").format(DateTime.now()).toUpperCase();
+
   DateWidget({
     @required this.date,
     this.hijriDate,
@@ -56,13 +59,13 @@ class DateWidget extends StatelessWidget {
                       .format(date)
                       .toUpperCase(), // WeekDay
                   style: dayTextStyle),
+              Text(date.day.toString(), // Date
+                  style: dateTextStyle),
               Text(
                   new DateFormat("MMM", locale)
                       .format(date)
                       .toUpperCase(), // Month
                   style: monthTextStyle),
-              Text(date.day.toString(), // Date
-                  style: dateTextStyle),
               Column(
                 children: <Widget>[
                   Text(
