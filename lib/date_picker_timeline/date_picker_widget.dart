@@ -1,8 +1,9 @@
+import 'package:fthakker/models/prayer_times.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:fthakker/date_picker_timeline/date_widget.dart';
-import 'package:fthakker/date_picker_timeline/extra/color.dart';
-import 'package:fthakker/date_picker_timeline/extra/style.dart';
-import 'package:fthakker/date_picker_timeline/gestures/tap.dart';
+import 'package:fthakker/utilities/colors.dart';
+import 'package:fthakker/utilities/styles.dart';
+import 'package:fthakker/types.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -67,15 +68,15 @@ class DatePicker extends StatefulWidget {
 
   DatePicker(this.startDate,
       {Key key,
-      this.width = 80,
-      this.height = 180,
+      @required this.width,
+      @required this.height,
       this.controller,
-      this.monthTextStyle = defaultMonthTextStyle,
-      this.dayTextStyle = defaultDayTextStyle,
-      this.dateTextStyle = defaultDateTextStyle,
+      this.monthTextStyle = kTextStyleMonth,
+      this.dayTextStyle = kTextStyleDay,
+      this.dateTextStyle = kTextStyleDate,
       this.selectedTextColor = Colors.white,
-      this.selectionColor = AppColors.defaultSelectionColor,
-      this.deactivatedColor = AppColors.defaultDeactivatedColor,
+      this.selectionColor = kColorSelectedText,
+      this.deactivatedColor = kColorUnselectedText,
       this.initialSelectedDate,
       this.activeDates,
       this.inactiveDates,
@@ -220,6 +221,27 @@ class _DatePickerState extends State<DatePicker> {
 
               // A date is selected
               setState(() {
+                // if (_currentDate == selectedDate)
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (BuildContext context) => PageView(
+                //               children: [
+                //                 Scaffold(
+                //                   backgroundColor: Colors.white,
+                //                   body: Container(
+                //                     child: Column(
+                //                       mainAxisAlignment:
+                //                           MainAxisAlignment.center,
+                //                       children: [
+                //                         Text("اليوم ١٢ ذي الحجة"),
+                //                       ],
+                //                     ),
+                //                   ),
+                //                 )
+                //               ],
+                //             )));
+
                 _currentDate = selectedDate;
                 widget.currentDate = selectedDate;
                 widget.latestTapDetails = details;
@@ -228,6 +250,7 @@ class _DatePickerState extends State<DatePicker> {
                 widget.onDateChange(selectedDate);
               }
             },
+            prayTimes: PrayTimes.prayTimesMonth[index + 1],
             // hijriDate: widget.hijriDate,
           );
         },
@@ -246,11 +269,13 @@ class _DatePickerState extends State<DatePicker> {
 
 class DatePickerController {
   _DatePickerState _datePickerState;
-  double oneDateWidth;
+  double itemWidth;
+  double halfItemWidth;
 
   void setDatePickerState(_DatePickerState state) {
     _datePickerState = state;
-    oneDateWidth = _datePickerState.widget.width;
+    itemWidth = _datePickerState.widget.width;
+    halfItemWidth = itemWidth / 2;
   }
 
   void jumpToSelection() {
@@ -258,24 +283,33 @@ class DatePickerController {
         'DatePickerController is not attached to any DatePicker View.');
 
     // jump to the current Date
-    _datePickerState._controller.jumpTo(
-        _datePickerState._currentDate.day * oneDateWidth - oneDateWidth);
+    _datePickerState._controller
+        .jumpTo(_datePickerState._currentDate.day * itemWidth - itemWidth);
     // .jumpTo(_calculateDateOffset(_datePickerState._currentDate));
   }
 
   /// This function will animate the Timeline to the currently selected Date
   void animateToSelection(
-      {duration = const Duration(milliseconds: 1000),
+      {duration = const Duration(milliseconds: 500),
       curve = Curves.fastOutSlowIn}) {
     assert(_datePickerState != null,
         'DatePickerController is not attached to any DatePicker View.');
 
-    // animate to the current date
-    _datePickerState._controller.animateTo(
-        _datePickerState._currentDate.day * oneDateWidth - oneDateWidth,
-        // _calculateDateOffset(_datePickerState._currentDate),
-        duration: duration,
-        curve: curve);
+    Future.delayed(const Duration(milliseconds: 50), () {
+      // print(_datePickerState._controller.position.extentBefore);
+      // print(_datePickerState._controller.position.extentAfter);
+      // print(_datePickerState._controller.position.extentInside);
+      // print(_datePickerState._controller.position.extentBefore % itemWidth);
+      print(_datePickerState._controller.offset);
+      print(_datePickerState.widget.latestTapDetails.globalPosition.dx);
+    });
+
+    // // animate to the current date
+    _datePickerState._controller
+        .animateTo(_datePickerState._currentDate.day * itemWidth - itemWidth,
+            // _calculateDateOffset(_datePickerState._currentDate),
+            duration: duration,
+            curve: curve);
   }
 
   /// This function will animate to any date that is passed as a parameter
@@ -286,11 +320,10 @@ class DatePickerController {
         'DatePickerController is not attached to any DatePicker View.');
     if (date == _datePickerState.widget.currentDate) return;
 
-    _datePickerState._controller
-        .animateTo(date.day * oneDateWidth - oneDateWidth,
-            // _calculateDateOffset(date),
-            duration: duration,
-            curve: curve);
+    _datePickerState._controller.animateTo(date.day * itemWidth - itemWidth,
+        // _calculateDateOffset(date),
+        duration: duration,
+        curve: curve);
   }
 
   /// Calculate the number of pixels that needs to be scrolled to go to the
@@ -299,6 +332,6 @@ class DatePickerController {
     var offset =
         (date.difference(_datePickerState.widget.endDate).inDays).abs();
     print(offset);
-    return (offset * oneDateWidth) - (oneDateWidth * 1);
+    return (offset * itemWidth) - (itemWidth * 1);
   }
 }

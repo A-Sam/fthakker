@@ -78,13 +78,18 @@ class _HomePageCardFastReminderState extends State<HomePageCardFastReminder>
                   Icons.assignment,
                 ),
                 Spacer(),
-                Text(
-                  "الصوم",
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: Colors.amber),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "الصوم",
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                    ),
                   ),
                 ),
               ],

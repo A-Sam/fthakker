@@ -1,15 +1,16 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fthakker/date_picker_timeline/date_widget.dart';
+import 'package:fthakker/models/date_singelton.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fthakker/models/fasting.dart';
-import 'package:fthakker/models/islamic_prayers.dart';
+import 'package:fthakker/models/prayer_times_cards.dart';
 import 'package:fthakker/models/models.dart';
 import 'package:fthakker/models/prayers.dart';
 import 'package:fthakker/models/zakah.dart';
-import 'package:fthakker/screens/home/body.dart';
+import 'package:fthakker/models/prayers_list.dart';
 import 'package:fthakker/screens/prayer_card.dart';
 import 'package:fthakker/size_config.dart';
 
@@ -20,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 
 class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
   TabController _tabController;
-  HijriCalendar todayHijri = HijriCalendar.now();
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -29,7 +29,7 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
     _getThingsOnStartup().then((value) {});
     HijriCalendar.setLocal("ar");
   }
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
               ]),
         ),
       ),
-      Body(),
+      PrayersList(),
       Text(
         'Index 2: أدعية',
         style: optionStyle,
@@ -94,16 +94,17 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
     return Scaffold(
       appBar: buildAppBar(),
       body: TabBarView(
+        physics: BouncingScrollPhysics(),
         children: <Widget>[
-          Center(child: _widgetOptions.elementAt(3)),
-          Center(child: _widgetOptions.elementAt(2)),
-          Center(child: _widgetOptions.elementAt(1)),
+          // Center(child: _widgetOptions.elementAt(3)),
+          // Center(child: _widgetOptions.elementAt(2)),
+          // Center(child: _widgetOptions.elementAt(1)),
           Center(child: _widgetOptions.elementAt(0)),
         ],
         controller: _tabController,
       ),
       backgroundColor: Colors.white,
-      bottomNavigationBar: buildBottomNavigationBar(),
+      // bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
 
@@ -139,7 +140,7 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
               children: [
                 Container(
                   child: Text(
-                    todayHijri.getDayName(),
+                    DateSingleton.todayHijriDate.getDayName(),
                     textDirection: TextDirection.rtl,
                     style: TextStyle(
                         fontSize: 15, color: Theme.of(context).accentColor),
@@ -151,7 +152,7 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
                 Column(
                   children: [
                     Text(
-                      todayHijri.hDay.toString(),
+                      DateSingleton.todayHijriDate.hDay.toString(),
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
                           fontSize: 15, color: Theme.of(context).accentColor),
@@ -170,7 +171,7 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
                 Column(
                   children: [
                     Text(
-                      todayHijri.getLongMonthName(),
+                      DateSingleton.todayHijriDate.getLongMonthName(),
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
                           fontSize: 15, color: Theme.of(context).accentColor),
@@ -189,7 +190,7 @@ class _MyHomePageState extends State<HomeScreen> with TickerProviderStateMixin {
                 Column(
                   children: [
                     Text(
-                      todayHijri.hYear.toString(),
+                      DateSingleton.todayHijriDate.hYear.toString(),
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
                           fontSize: 15, color: Theme.of(context).accentColor),
