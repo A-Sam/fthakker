@@ -2,3 +2,6 @@
 build/*
 .dart_tool/*
 .vscode/*
+.flutter*
+.packages
+pubspec*.*
